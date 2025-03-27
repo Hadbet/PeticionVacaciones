@@ -475,7 +475,7 @@
       }
 
       function llenarShift() {
-        $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoShiftLeader.php?APU=' + document.getElementById("cbSupervisor").value, function (data) {
+        $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoShiftLeader.php?APU=' + document.getElementById("cbApu").value, function (data) {
           var selectS = document.getElementById("cbShiftLeader");
           selectS.innerHTML = "";
 
