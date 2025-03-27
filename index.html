@@ -452,7 +452,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
     <script>
       function llenarSuper() {
-        $.getJSON('dao/daoSupervisor.php?APU=' + document.getElementById("cbApu").value, function (data) {
+        $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoSupervisor.php?APU=' + document.getElementById("cbApu").value, function (data) {
           var selectS = document.getElementById("cbSupervisor");
           selectS.innerHTML = "";
 
@@ -475,7 +475,7 @@
       }
 
       function llenarShift() {
-        $.getJSON('dao/daoShiftLeader.php?APU=' + document.getElementById("cbSupervisor").value, function (data) {
+        $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoShiftLeader.php?APU=' + document.getElementById("cbSupervisor").value, function (data) {
           var selectS = document.getElementById("cbShiftLeader");
           selectS.innerHTML = "";
 
