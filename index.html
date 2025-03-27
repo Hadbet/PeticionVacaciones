@@ -495,31 +495,16 @@
     </script>
 
     <script>
-      // Datos iniciales
-      let events = [
-        {
-          id: 1,
-          title: "Reunión mensual",
-          date: "2025-03-15",
-          apu: "APU 1",
-          supervisor: "Juan Pérez",
-          shiftleader: "Ana Martínez"
-        }
-      ];
-
-      // Días bloqueados (ejemplo en formato YYYY-MM-DD)
-      const blockedDays = [
-        "2025-03-28",
-        "2023-11-11",
-        "2023-11-12",
-        "2023-12-25",
-        "2024-01-01"
-      ];
-
-      // Variables de estado
+      // Variables globales
+      let events = [];
+      let blockedDays = [];
+      let selectedApu = '';
+      let selectedSupervisor = '';
+      let selectedShiftLeader = '';
       let currentDate = new Date();
       let selectedEvent = null;
 
+      // Fechas permitidas (desde hoy hasta 2 meses después)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const maxDate = new Date();
@@ -547,28 +532,102 @@
       const cbSupervisor = document.getElementById('cbSupervisor');
       const cbShiftLeader = document.getElementById('cbShiftLeader');
 
-      // Evento para enviar el formulario inicial
-      submitBtn.addEventListener('click', () => {
-        // Validar que todos los campos estén completos
-        if (!cbApu.value || !cbSupervisor.value || !cbShiftLeader.value) {
-          alert('Por favor complete todos los campos del formulario');
-          return;
-        }
+      // Función para formatear fechas a YYYY-MM-DD
+      function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+      }
 
-        // Guardar las selecciones
+      // Función para cargar eventos desde la API
+      function loadEventsFromAPI() {
+        return new Promise((resolve, reject) => {
+          $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoSolicitudesShiftLeader.php', function(data) {
+            if (data && data.data) {
+              events = data.data.map(item => ({
+                id: item.IdSolicitud,
+                title: "Petición de vacaciones", // Título fijo
+                date: formatDate(item.FechaSolicitud),
+                apu: item.APU,
+                supervisor: item.Supervisor,
+                shiftleader: item.ShiftLeader
+              }));
+              resolve();
+            } else {
+              reject(new Error('Datos de eventos no válidos'));
+            }
+          }).fail(reject);
+        });
+      }
+
+      // Función para cargar días bloqueados desde la API
+      function loadBlockedDaysFromAPI() {
+        return new Promise((resolve, reject) => {
+          $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoDiasBloqueados.php', function(data) {
+            if (data && data.data) {
+              blockedDays = data.data.map(item => formatDate(item.Fecha));
+              resolve();
+            } else {
+              reject(new Error('Datos de días bloqueados no válidos'));
+            }
+          }).fail(reject);
+        });
+      }
+
+      // Función para inicializar el calendario cargando los datos
+      async function initializeCalendar() {
+        try {
+          showLoader();
+
+          // Cargar datos en paralelo
+          await Promise.all([
+            loadEventsFromAPI(),
+            loadBlockedDaysFromAPI()
+          ]);
+
+          initCalendar();
+        } catch (error) {
+          console.error('Error al cargar datos:', error);
+          // Mostrar datos por defecto en caso de error
+          events = [{
+            id: 1,
+            title: "Petición de vacaciones",
+            date: new Date().toISOString().split('T')[0],
+            apu: "APU 1",
+            supervisor: "Supervisor por defecto",
+            shiftleader: "Shift Leader por defecto"
+          }];
+
+          blockedDays = [
+            new Date().toISOString().split('T')[0] // Bloquear hoy como ejemplo
+          ];
+
+          initCalendar();
+        } finally {
+          hideLoader();
+        }
+      }
+
+      // Evento para enviar el formulario inicial
+      submitBtn.addEventListener('click', async () => {
+        if (!validarFormularioInicial()) return;
+
         selectedApu = cbApu.value;
         selectedSupervisor = cbSupervisor.value;
         selectedShiftLeader = cbShiftLeader.value;
 
-        // Mostrar el calendario
+        await initializeCalendar();
         calendarContainer.style.display = 'block';
-
-        // Inicializar el calendario
-        initCalendar();
-
-        // Desplazarse suavemente al calendario
         calendarContainer.scrollIntoView({ behavior: 'smooth' });
       });
+
+      function validarFormularioInicial() {
+        if (!cbApu.value || !cbSupervisor.value || !cbShiftLeader.value) {
+          alert('Por favor complete todos los campos del formulario');
+          return false;
+        }
+        return true;
+      }
 
       // Inicializar calendario
       function initCalendar() {
@@ -578,57 +637,45 @@
 
       // Renderizar el calendario
       function renderCalendar() {
-        // Limpiar celdas de días (excepto encabezados)
         while (calendarGrid.children.length > 7) {
           calendarGrid.removeChild(calendarGrid.lastChild);
         }
 
-        // Establecer el mes/año actual en el encabezado
         currentMonthElement.textContent = `${getMonthName(currentDate.getMonth())} ${currentDate.getFullYear()}`;
 
-        // Obtener primer día del mes y último día del mes
         const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-        // Obtener día de la semana del primer día (0-6, donde 0 es domingo)
         let firstDayOfWeek = firstDay.getDay();
-        // Ajustar para que la semana empiece en lunes
         firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
 
-        // Obtener último día del mes anterior
         const daysInLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
 
-        // Agregar días del mes anterior
         for (let i = firstDayOfWeek - 1; i >= 0; i--) {
           const day = daysInLastMonth - i;
           const dayCell = createDayCell(day, true);
           calendarGrid.appendChild(dayCell);
         }
 
-        // Agregar días del mes actual
         for (let day = 1; day <= lastDay.getDate(); day++) {
           const dateStr = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
           const dayCell = createDayCell(day, false);
           const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
 
-          // Resaltar el día actual
           if (currentDate.getMonth() === today.getMonth() &&
                   currentDate.getFullYear() === today.getFullYear() &&
                   day === today.getDate()) {
             dayCell.classList.add('today');
           }
 
-          // Marcar días bloqueados
           if (blockedDays.includes(dateStr)) {
             dayCell.classList.add('blocked-day');
           }
 
-          // Marcar días futuros permitidos
           if (cellDate >= today && cellDate <= maxDate) {
             dayCell.classList.add('future-day');
           }
 
-          // Agregar eventos para este día
           const dayEvents = events.filter(event => event.date === dateStr);
           dayEvents.forEach(event => {
             const eventElement = document.createElement('div');
@@ -642,12 +689,10 @@
           calendarGrid.appendChild(dayCell);
         }
 
-        // Calcular días restantes para completar la cuadrícula (6 filas)
-        const totalCells = 7 * 6; // 7 días por semana, 6 filas
+        const totalCells = 7 * 6;
         const daysAdded = firstDayOfWeek + lastDay.getDate();
         const daysRemaining = totalCells - daysAdded;
 
-        // Agregar días del próximo mes
         for (let day = 1; day <= daysRemaining; day++) {
           const dayCell = createDayCell(day, true);
           calendarGrid.appendChild(dayCell);
@@ -664,12 +709,10 @@
         dayNumber.textContent = day;
         dayCell.appendChild(dayNumber);
 
-        // Solo permitir agregar eventos en días del mes actual que estén en el rango permitido
         if (!isOtherMonth) {
           const dateStr = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
           const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
 
-          // Permitir agregar eventos solo si está en el rango permitido y no está bloqueado
           if (cellDate >= today && cellDate <= maxDate && !blockedDays.includes(dateStr)) {
             dayCell.addEventListener('click', (e) => {
               if (e.target === dayCell || e.target === dayNumber) {
@@ -703,7 +746,6 @@
           eventModal.style.display = 'none';
         });
 
-        // Cerrar modal haciendo clic fuera del contenido
         eventModal.addEventListener('click', (e) => {
           if (e.target === eventModal) {
             eventModal.style.display = 'none';
@@ -716,14 +758,11 @@
         selectedEvent = null;
         modalTitle.textContent = 'Solicitar Vacaciones';
         eventIdInput.value = '';
-        eventTitleInput.value = '';
+        eventTitleInput.value = 'Petición de vacaciones'; // Valor fijo
         eventDateInput.value = date;
-
-        // Establecer los valores seleccionados previamente y bloquearlos
         eventApuInput.value = selectedApu;
         eventSupervisorInput.value = selectedSupervisor;
         eventShiftLeaderInput.value = selectedShiftLeader;
-
         eventModal.style.display = 'flex';
       }
 
@@ -737,27 +776,22 @@
         eventIdInput.value = event.id;
         eventTitleInput.value = event.title;
         eventDateInput.value = event.date;
-
-        // Mantener los valores originales bloqueados
         eventApuInput.value = event.apu;
         eventSupervisorInput.value = event.supervisor;
         eventShiftLeaderInput.value = event.shiftleader;
-
         eventModal.style.display = 'flex';
       }
 
       // Guardar evento (crear o actualizar)
-      function saveEvent() {
+      async function saveEvent() {
         const eventDate = new Date(eventDateInput.value);
         eventDate.setHours(0, 0, 0, 0);
 
-        // Validar que la fecha esté dentro del rango permitido
         if (eventDate < today || eventDate > maxDate) {
           alert('Solo puedes solicitar vacaciones desde hoy hasta ' + maxDate.toLocaleDateString());
           return;
         }
 
-        // Validar que no sea un día bloqueado
         if (blockedDays.includes(eventDateInput.value)) {
           alert('No puedes solicitar vacaciones en días bloqueados');
           return;
@@ -765,40 +799,48 @@
 
         const eventData = {
           id: selectedEvent ? selectedEvent.id : Date.now(),
-          title: eventTitleInput.value,
+          title: "Petición de vacaciones", // Título fijo
           date: eventDateInput.value,
           apu: selectedApu,
           supervisor: selectedSupervisor,
           shiftleader: selectedShiftLeader
         };
 
-        if (selectedEvent) {
-          // Actualizar evento existente
-          const index = events.findIndex(e => e.id == selectedEvent.id);
-          if (index !== -1) {
-            events[index] = eventData;
+        try {
+          showLoader();
+
+          const response = await $.ajax({
+            url: 'https://grammermx.com/RH/Vacaciones/dao/guardarSolicitud.php',
+            method: 'POST',
+            dataType: 'json',
+            data: eventData
+          });
+
+          if (response.success) {
+            if (selectedEvent) {
+              const index = events.findIndex(e => e.id == selectedEvent.id);
+              if (index !== -1) {
+                events[index] = eventData;
+              }
+            } else {
+              events.push({
+                ...eventData,
+                id: response.id || Date.now()
+              });
+            }
+
+            localStorage.setItem('vacationRequests', JSON.stringify(events));
+            eventModal.style.display = 'none';
+            renderCalendar();
+            alert('Solicitud de vacaciones enviada correctamente');
+          } else {
+            alert('Error al guardar: ' + (response.message || 'Por favor intente nuevamente'));
           }
-        } else {
-          // Agregar nuevo evento
-          events.push(eventData);
-        }
-
-        // Guardar en localStorage (simulando JSON)
-        localStorage.setItem('vacationRequests', JSON.stringify(events));
-
-        // Cerrar modal y actualizar calendario
-        eventModal.style.display = 'none';
-        renderCalendar();
-
-        // Mostrar confirmación
-        alert('Solicitud de vacaciones enviada correctamente');
-      }
-
-      // Cargar eventos desde localStorage (o datos iniciales)
-      function loadEvents() {
-        const savedEvents = localStorage.getItem('vacationRequests');
-        if (savedEvents) {
-          events = JSON.parse(savedEvents);
+        } catch (error) {
+          console.error('Error al guardar:', error);
+          alert('Error al conectar con el servidor');
+        } finally {
+          hideLoader();
         }
       }
 
@@ -811,8 +853,22 @@
         return months[monthIndex];
       }
 
-      // Inicializar la aplicación
-      loadEvents();
+      // Funciones para loader (debes implementar según tu UI)
+      function showLoader() {
+        // Ejemplo: document.getElementById('loader').style.display = 'block';
+        console.log('Mostrando loader...');
+      }
+
+      function hideLoader() {
+        // Ejemplo: document.getElementById('loader').style.display = 'none';
+        console.log('Ocultando loader...');
+      }
+
+      // Cargar eventos iniciales al cargar la página
+      $(document).ready(function() {
+        // Opcional: Cargar datos iniciales si es necesario
+        // initializeCalendar();
+      });
     </script>
 
 
