@@ -338,6 +338,21 @@
               </div>
               <div class="card-body">
                 <div class="row">
+
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="cbSupervisor">Nomina</label>
+                      <input type="text" id="txtNomina">
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="cbSupervisor">Nombre</label>
+                      <input type="text" id="txtNombre">
+                    </div>
+                  </div>
+
                   <div class="col-md-4">
                     <div class="form-group mb-3">
                       <label for="cbApu">APU</label>
@@ -810,7 +825,7 @@
           showLoader();
 
           const response = await $.ajax({
-            url: 'https://grammermx.com/RH/Vacaciones/dao/guardarSolicitud.php',
+            url: 'https://grammermx.com/RH/Vacaciones/dao/daoGuardarSolicitud.php',
             method: 'POST',
             dataType: 'json',
             data: eventData
