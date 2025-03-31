@@ -812,13 +812,26 @@
           return;
         }
 
+        // Obtener valores de los nuevos campos
+        const nomina = document.getElementById('txtNomina').value;
+        const nombre = document.getElementById('txtNombre').value;
+
+        // Validar que los campos requeridos estén completos
+        if (!nomina || !nombre) {
+          alert('Por favor complete los campos de nómina y nombre');
+          return;
+        }
+
         const eventData = {
           id: selectedEvent ? selectedEvent.id : Date.now(),
-          title: "Petición de vacaciones", // Título fijo
+          title: "Petición de vacaciones",
           date: eventDateInput.value,
           apu: selectedApu,
           supervisor: selectedSupervisor,
-          shiftleader: selectedShiftLeader
+          shiftleader: selectedShiftLeader,
+          // Agregar los nuevos campos para enviar al servidor
+          nomina: nomina,
+          nombre: nombre
         };
 
         try {
@@ -828,7 +841,15 @@
             url: 'https://grammermx.com/RH/Vacaciones/dao/daoGuardarSolicitud.php',
             method: 'POST',
             dataType: 'json',
-            data: eventData
+            data: {
+              // Mapear los nombres según lo esperado por el PHP
+              nomina: eventData.nomina,
+              nombre: eventData.nombre,
+              APU: eventData.apu,
+              Supervisor: eventData.supervisor,
+              ShiftLeader: eventData.shiftleader,
+              Fecha: eventData.date
+            }
           });
 
           if (response.success) {
@@ -848,12 +869,16 @@
             eventModal.style.display = 'none';
             renderCalendar();
             alert('Solicitud de vacaciones enviada correctamente');
+
+            // Opcional: Limpiar los campos después de enviar
+            document.getElementById('txtNomina').value = '';
+            document.getElementById('txtNombre').value = '';
           } else {
             alert('Error al guardar: ' + (response.message || 'Por favor intente nuevamente'));
           }
         } catch (error) {
           console.error('Error al guardar:', error);
-          alert('Error al conectar con el servidor');
+          alert('Error al conectar con el servidor: ' + error.message);
         } finally {
           hideLoader();
         }
