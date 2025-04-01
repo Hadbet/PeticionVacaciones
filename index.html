@@ -782,7 +782,7 @@
             eventElement.className = 'event';
             eventElement.textContent = `${event.title}`;
             eventElement.dataset.eventId = event.id;
-            eventElement.addEventListener('click', () => editEvent(event.id));
+            // Eliminado el event listener para edición
             dayCell.appendChild(eventElement);
           });
 
@@ -871,23 +871,7 @@
         eventModal.style.display = 'flex';
       }
 
-      // Abrir modal para editar evento
-      function editEvent(eventId) {
-        const event = events.find(e => e.id == eventId);
-        if (!event) return;
-
-        selectedEvent = event;
-        modalTitle.textContent = 'Editar Solicitud';
-        eventIdInput.value = event.id;
-        eventTitleInput.value = event.title;
-        eventDateInput.value = event.date;
-        eventApuInput.value = event.apu;
-        eventSupervisorInput.value = event.supervisor;
-        eventShiftLeaderInput.value = event.shiftleader;
-        eventModal.style.display = 'flex';
-      }
-
-      // Guardar evento (crear o actualizar)
+      // Guardar evento (solo creación)
       async function saveEvent() {
         const eventDate = new Date(eventDateInput.value);
         eventDate.setHours(0, 0, 0, 0);
@@ -920,7 +904,7 @@
         }
 
         const eventData = {
-          id: selectedEvent ? selectedEvent.id : Date.now(),
+          id: Date.now(), // Siempre nuevo ID (no se permiten ediciones)
           title: "Petición de vacaciones",
           date: eventDateInput.value,
           apu: selectedApu,
@@ -948,17 +932,10 @@
           });
 
           if (response.success) {
-            if (selectedEvent) {
-              const index = events.findIndex(e => e.id == selectedEvent.id);
-              if (index !== -1) {
-                events[index] = eventData;
-              }
-            } else {
-              events.push({
-                ...eventData,
-                id: response.id || Date.now()
-              });
-            }
+            events.push({
+              ...eventData,
+              id: response.id || Date.now()
+            });
 
             localStorage.setItem('vacationRequests', JSON.stringify(events));
             eventModal.style.display = 'none';
@@ -1006,7 +983,6 @@
 
       // Inicialización
       $(document).ready(function() {
-        // Inicializar tooltips de Bootstrap si es necesario
         $('[data-toggle="tooltip"]').tooltip();
       });
     </script>
