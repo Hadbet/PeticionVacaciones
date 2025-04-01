@@ -197,6 +197,30 @@
         background: #dc3545;
         color: white;
       }
+
+      .event-counter {
+        font-weight: bold;
+        padding: 2px;
+        border-radius: 3px;
+        background-color: rgba(255,255,255,0.7);
+        font-size: 0.8rem;
+        text-align: right;
+        margin-bottom: 5px;
+      }
+
+      .day-cell:hover .event-counter {
+        background-color: rgba(255,255,255,0.9);
+      }
+
+      .alert-info {
+        margin-top: 15px;
+        border-radius: 5px;
+      }
+
+      .blocked-day .event-counter {
+        color: #ccc !important;
+      }
+
     </style>
 
   </head>
@@ -463,6 +487,7 @@
     <script src="js/tinycolor-min.js"></script>
     <script src="js/config.js"></script>
     <script src="js/apps.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
     <script>
@@ -507,6 +532,17 @@
           }
         });
       }
+
+
+      function llenarConfiguracionPorShiftLeader() {
+        $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoConfiguraciones.php', function (data) {
+          for (var i = 0; i < data.data.length; i++) {
+            data.data[i].Descripcion;
+            data.data[i].Tipo;
+            data.data[i].ShiftLeader;
+          }
+        });
+      }
     </script>
 
     <script>
@@ -518,6 +554,7 @@
       let selectedShiftLeader = '';
       let currentDate = new Date();
       let selectedEvent = null;
+      let eventosPorDia = 1; // Valor por defecto
 
       // Fechas permitidas (desde hoy hasta 2 meses después)
       const today = new Date();
@@ -547,6 +584,31 @@
       const cbSupervisor = document.getElementById('cbSupervisor');
       const cbShiftLeader = document.getElementById('cbShiftLeader');
 
+      // Función para cargar la configuración del Shift Leader
+      function loadShiftLeaderConfig(shiftLeaderName) {
+        return new Promise((resolve, reject) => {
+          $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoConfiguraciones.php', function(data) {
+            if (data && data.data) {
+              const config = data.data.find(item =>
+                      item.Tipo === "Dias habilitados" &&
+                      item.ShiftLeader === shiftLeaderName
+              );
+
+              if (config) {
+                eventosPorDia = parseInt(config.Descripcion) || 1;
+                console.log(`Configuración cargada: ${eventosPorDia} eventos/día para ${shiftLeaderName}`);
+              } else {
+                eventosPorDia = 1;
+                console.warn(`No se encontró configuración para ${shiftLeaderName}, usando valor por defecto (1)`);
+              }
+              resolve();
+            } else {
+              reject(new Error('Datos de configuración no válidos'));
+            }
+          }).fail(reject);
+        });
+      }
+
       // Función para formatear fechas a YYYY-MM-DD
       function formatDate(dateString) {
         if (!dateString) return '';
@@ -557,11 +619,11 @@
       // Función para cargar eventos desde la API
       function loadEventsFromAPI() {
         return new Promise((resolve, reject) => {
-          $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoSolicitudesShiftLeader.php?shiftLeader='+document.getElementById("cbShiftLeader").value, function(data) {
+          $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoSolicitudesShiftLeader.php?shiftLeader='+encodeURIComponent(selectedShiftLeader), function(data) {
             if (data && data.data) {
               events = data.data.map(item => ({
                 id: item.IdSolicitud,
-                title: "Petición de vacaciones", // Título fijo
+                title: "Petición de vacaciones",
                 date: formatDate(item.FechaSolicitud),
                 apu: item.APU,
                 supervisor: item.Supervisor,
@@ -589,21 +651,17 @@
         });
       }
 
-      // Función para inicializar el calendario cargando los datos
+      // Función para inicializar el calendario
       async function initializeCalendar() {
         try {
           showLoader();
-
-          // Cargar datos en paralelo
           await Promise.all([
             loadEventsFromAPI(),
             loadBlockedDaysFromAPI()
           ]);
-
           initCalendar();
         } catch (error) {
           console.error('Error al cargar datos:', error);
-          // Mostrar datos por defecto en caso de error
           events = [{
             id: 1,
             title: "Petición de vacaciones",
@@ -612,11 +670,7 @@
             supervisor: "Supervisor por defecto",
             shiftleader: "Shift Leader por defecto"
           }];
-
-          blockedDays = [
-            new Date().toISOString().split('T')[0] // Bloquear hoy como ejemplo
-          ];
-
+          blockedDays = [new Date().toISOString().split('T')[0]];
           initCalendar();
         } finally {
           hideLoader();
@@ -631,14 +685,34 @@
         selectedSupervisor = cbSupervisor.value;
         selectedShiftLeader = cbShiftLeader.value;
 
-        await initializeCalendar();
-        calendarContainer.style.display = 'block';
-        calendarContainer.scrollIntoView({ behavior: 'smooth' });
+        try {
+          showLoader();
+          await loadShiftLeaderConfig(selectedShiftLeader);
+          await initializeCalendar();
+
+          calendarContainer.style.display = 'block';
+          calendarContainer.scrollIntoView({ behavior: 'smooth' });
+
+          // Mostrar información al usuario
+          const infoElement = document.createElement('div');
+          infoElement.className = 'alert alert-info mt-3';
+          infoElement.innerHTML = `
+        <strong>Configuración actual:</strong>
+        Máximo ${eventosPorDia} solicitud(es) de vacaciones por día permitidas
+      `;
+          calendarContainer.parentNode.insertBefore(infoElement, calendarContainer.nextSibling);
+
+        } catch (error) {
+          console.error('Error:', error);
+          Swal.fire('Error', 'Error al cargar la configuración', 'error');
+        } finally {
+          hideLoader();
+        }
       });
 
       function validarFormularioInicial() {
         if (!cbApu.value || !cbSupervisor.value || !cbShiftLeader.value) {
-          alert('Por favor complete todos los campos del formulario');
+          Swal.fire('Error', 'Por favor complete todos los campos del formulario', 'warning');
           return false;
         }
         return true;
@@ -692,6 +766,17 @@
           }
 
           const dayEvents = events.filter(event => event.date === dateStr);
+
+          // Mostrar contador de eventos (X/Y)
+          const counterElement = document.createElement('div');
+          counterElement.className = 'event-counter';
+          counterElement.textContent = `${dayEvents.length}/${eventosPorDia}`;
+          counterElement.style.fontSize = '0.8rem';
+          counterElement.style.textAlign = 'right';
+          counterElement.style.marginBottom = '5px';
+          counterElement.style.color = dayEvents.length >= eventosPorDia ? 'red' : 'green';
+          dayCell.insertBefore(counterElement, dayCell.firstChild);
+
           dayEvents.forEach(event => {
             const eventElement = document.createElement('div');
             eventElement.className = 'event';
@@ -731,7 +816,12 @@
           if (cellDate >= today && cellDate <= maxDate && !blockedDays.includes(dateStr)) {
             dayCell.addEventListener('click', (e) => {
               if (e.target === dayCell || e.target === dayNumber) {
-                addEvent(dateStr);
+                const dayEvents = events.filter(event => event.date === dateStr);
+                if (dayEvents.length >= eventosPorDia) {
+                  Swal.fire('Límite alcanzado', `Solo se permiten ${eventosPorDia} solicitudes por día`, 'warning');
+                } else {
+                  addEvent(dateStr);
+                }
               }
             });
           }
@@ -773,7 +863,7 @@
         selectedEvent = null;
         modalTitle.textContent = 'Solicitar Vacaciones';
         eventIdInput.value = '';
-        eventTitleInput.value = 'Petición de vacaciones'; // Valor fijo
+        eventTitleInput.value = 'Petición de vacaciones';
         eventDateInput.value = date;
         eventApuInput.value = selectedApu;
         eventSupervisorInput.value = selectedSupervisor;
@@ -802,23 +892,30 @@
         const eventDate = new Date(eventDateInput.value);
         eventDate.setHours(0, 0, 0, 0);
 
+        // Validaciones de fecha
         if (eventDate < today || eventDate > maxDate) {
-          alert('Solo puedes solicitar vacaciones desde hoy hasta ' + maxDate.toLocaleDateString());
+          Swal.fire('Error', 'Solo puedes solicitar vacaciones desde hoy hasta ' + maxDate.toLocaleDateString(), 'warning');
           return;
         }
 
         if (blockedDays.includes(eventDateInput.value)) {
-          alert('No puedes solicitar vacaciones en días bloqueados');
+          Swal.fire('Error', 'No puedes solicitar vacaciones en días bloqueados', 'warning');
           return;
         }
 
-        // Obtener valores de los nuevos campos
+        // Validar límite de eventos por día
+        const eventosEnEsteDia = events.filter(e => e.date === eventDateInput.value).length;
+        if (eventosEnEsteDia >= eventosPorDia) {
+          Swal.fire('Límite alcanzado', `No puedes agregar más de ${eventosPorDia} solicitudes de vacaciones por día`, 'warning');
+          return;
+        }
+
+        // Obtener valores de los campos
         const nomina = document.getElementById('txtNomina').value;
         const nombre = document.getElementById('txtNombre').value;
 
-        // Validar que los campos requeridos estén completos
         if (!nomina || !nombre) {
-          alert('Por favor complete los campos de nómina y nombre');
+          Swal.fire('Error', 'Por favor complete los campos de nómina y nombre', 'warning');
           return;
         }
 
@@ -829,7 +926,6 @@
           apu: selectedApu,
           supervisor: selectedSupervisor,
           shiftleader: selectedShiftLeader,
-          // Agregar los nuevos campos para enviar al servidor
           nomina: nomina,
           nombre: nombre
         };
@@ -842,7 +938,6 @@
             method: 'POST',
             dataType: 'json',
             data: {
-              // Mapear los nombres según lo esperado por el PHP
               nomina: eventData.nomina,
               nombre: eventData.nombre,
               APU: eventData.apu,
@@ -868,17 +963,22 @@
             localStorage.setItem('vacationRequests', JSON.stringify(events));
             eventModal.style.display = 'none';
             renderCalendar();
-            alert('Solicitud de vacaciones enviada correctamente');
 
-            // Opcional: Limpiar los campos después de enviar
+            Swal.fire({
+              title: "¡Éxito!",
+              text: "Solicitud de vacaciones enviada correctamente",
+              icon: "success"
+            });
+
+            // Limpiar campos
             document.getElementById('txtNomina').value = '';
             document.getElementById('txtNombre').value = '';
           } else {
-            alert('Error al guardar: ' + (response.message || 'Por favor intente nuevamente'));
+            Swal.fire('Error', response.message || 'Error al guardar la solicitud', 'error');
           }
         } catch (error) {
           console.error('Error al guardar:', error);
-          alert('Error al conectar con el servidor: ' + error.message);
+          Swal.fire('Error', 'Error al conectar con el servidor', 'error');
         } finally {
           hideLoader();
         }
@@ -893,21 +993,21 @@
         return months[monthIndex];
       }
 
-      // Funciones para loader (debes implementar según tu UI)
+      // Funciones para loader
       function showLoader() {
-        // Ejemplo: document.getElementById('loader').style.display = 'block';
-        console.log('Mostrando loader...');
+        const loader = document.getElementById('loader');
+        if (loader) loader.style.display = 'block';
       }
 
       function hideLoader() {
-        // Ejemplo: document.getElementById('loader').style.display = 'none';
-        console.log('Ocultando loader...');
+        const loader = document.getElementById('loader');
+        if (loader) loader.style.display = 'none';
       }
 
-      // Cargar eventos iniciales al cargar la página
+      // Inicialización
       $(document).ready(function() {
-        // Opcional: Cargar datos iniciales si es necesario
-        // initializeCalendar();
+        // Inicializar tooltips de Bootstrap si es necesario
+        $('[data-toggle="tooltip"]').tooltip();
       });
     </script>
 
