@@ -19,7 +19,7 @@ if ($statusLogin['status'] == 1) {
     $_SESSION['nomina'] = $statusLogin['idUser'];
     $_SESSION['nombre'] = $statusLogin['nomUser'];
     $_SESSION['tag'] = $statusLogin['idTag'];
-
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='1; URL=../inicio.html'>";
 } else if ($statusLogin['status'] == 2) {
     echo "<script>alert('Tag o Usuario incorrecta')</script>";
     echo "<META HTTP-EQUIV='REFRESH' CONTENT='1; URL=../index.html'>";
