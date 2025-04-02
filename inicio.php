@@ -579,6 +579,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
     let currentDate = new Date();
     let selectedEvent = null;
     let eventosPorDia = 1; // Valor por defecto
+    let currentUserNomina = '';
 
     // Fechas permitidas (desde hoy hasta 2 meses después)
     const today = new Date();
@@ -643,7 +644,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
     // Función para cargar eventos desde la API
     function loadEventsFromAPI() {
         return new Promise((resolve, reject) => {
-            $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoSolicitudesShiftLeader.php?shiftLeader=' + encodeURIComponent(selectedShiftLeader), function (data) {
+            $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoSolicitudesShiftLeader.php?shiftLeader=' + encodeURIComponent(selectedShiftLeader), function(data) {
                 if (data && data.data) {
                     events = data.data.map(item => ({
                         id: item.IdSolicitud,
@@ -651,7 +652,8 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                         date: formatDate(item.FechaSolicitud),
                         apu: item.APU,
                         supervisor: item.Supervisor,
-                        shiftleader: item.ShiftLeader
+                        shiftleader: item.ShiftLeader,
+                        nomina: item.NominaSolicitud // Nuevo campo agregado
                     }));
                     resolve();
                 } else {
@@ -900,6 +902,21 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
         const eventDate = new Date(eventDateInput.value);
         eventDate.setHours(0, 0, 0, 0);
 
+        // Obtener valores de los campos
+        const nomina = document.getElementById('txtNomina').value;
+        const nombre = document.getElementById('txtNombre').value;
+
+        // Validar si ya existe una solicitud para esta nómina en la misma fecha
+        const yaTieneSolicitud = events.some(event =>
+            event.nomina === nomina &&
+            event.date === eventDateInput.value
+        );
+
+        if (yaTieneSolicitud) {
+            Swal.fire('Solicitud existente', 'Ya tienes una solicitud de vacaciones para esta fecha. Por favor elige otra fecha.', 'warning');
+            return;
+        }
+
         // Validaciones de fecha
         if (eventDate < today || eventDate > maxDate) {
             Swal.fire('Error', 'Solo puedes solicitar vacaciones desde hoy hasta ' + maxDate.toLocaleDateString(), 'warning');
@@ -917,10 +934,6 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
             Swal.fire('Límite alcanzado', `No puedes agregar más de ${eventosPorDia} solicitudes de vacaciones por día`, 'warning');
             return;
         }
-
-        // Obtener valores de los campos
-        const nomina = document.getElementById('txtNomina').value;
-        const nombre = document.getElementById('txtNombre').value;
 
         if (!nomina || !nombre) {
             Swal.fire('Error', 'Por favor complete los campos de nómina y nombre', 'warning');
