@@ -648,7 +648,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                 if (data && data.data) {
                     events = data.data.map(item => ({
                         id: item.IdSolicitud,
-                        title: "Petición de vacaciones",
+                        title: "1 lugar ocupado",
                         date: formatDate(item.FechaSolicitud),
                         apu: item.APU,
                         supervisor: item.Supervisor,
