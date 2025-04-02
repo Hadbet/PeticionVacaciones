@@ -22,8 +22,8 @@ try {
         // 1. Obtener límite configurado para el Shift Leader
         $stmtLimit = $conex->prepare("
             SELECT Descripcion 
-            FROM configuraciones 
-            WHERE Tipo = 'Dias habilitados' 
+            FROM ConfiguracionVacaciones 
+            WHERE Tipo = 'Dias Habilitados' 
             AND ShiftLeader = ?
         ");
         $stmtLimit->bind_param("s", $shiftLeader);
