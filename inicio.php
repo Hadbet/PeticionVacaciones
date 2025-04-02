@@ -928,7 +928,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
             return;
         }
 
-        // Validar límite de eventos por día
+        // Validar límite de eventos por día (frontend como capa UX)
         const eventosEnEsteDia = events.filter(e => e.date === eventDateInput.value).length;
         if (eventosEnEsteDia >= eventosPorDia) {
             Swal.fire('Límite alcanzado', `No puedes agregar más de ${eventosPorDia} solicitudes de vacaciones por día`, 'warning');
@@ -941,7 +941,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
         }
 
         const eventData = {
-            id: Date.now(), // Siempre nuevo ID (no se permiten ediciones)
+            id: Date.now(),
             title: "Petición de vacaciones",
             date: eventDateInput.value,
             apu: selectedApu,
@@ -964,7 +964,8 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                     APU: eventData.apu,
                     Supervisor: eventData.supervisor,
                     ShiftLeader: eventData.shiftleader,
-                    Fecha: eventData.date
+                    Fecha: eventData.date,
+                    validarConcurrencia: true
                 }
             });
 
@@ -981,14 +982,20 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                 Swal.fire({
                     title: "¡Éxito!",
                     text: "Solicitud de vacaciones enviada correctamente",
-                    icon: "success"
+                    icon: "success",
+                    confirmButtonText: "OK Gracias!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.open("https://grammermx.com/RH/Vacaciones/inicio.php");
+                    }
                 });
-
-                // Limpiar campos
-                document.getElementById('txtNomina').value = '';
-                document.getElementById('txtNombre').value = '';
             } else {
-                Swal.fire('Error', response.message || 'Error al guardar la solicitud', 'error');
+                Swal.fire('Error',
+                    response.message || 'Error al guardar la solicitud. ' +
+                    (response.error === 'concurrencia'
+                        ? 'Límite de solicitudes alcanzado para este día.'
+                        : ''),
+                    'error');
             }
         } catch (error) {
             console.error('Error al guardar:', error);
