@@ -690,7 +690,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
             console.error('Error al cargar datos:', error);
             events = [{
                 id: 1,
-                title: "Petición de vacaciones",
+                title: "1 lugar ocupado",
                 date: new Date().toISOString().split('T')[0],
                 apu: "APU 1",
                 supervisor: "Supervisor por defecto",
