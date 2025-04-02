@@ -990,12 +990,19 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                     }
                 });
             } else {
-                Swal.fire('Error',
-                    response.message || 'Error al guardar la solicitud. ' +
-                    (response.error === 'concurrencia'
-                        ? 'Límite de solicitudes alcanzado para este día.'
-                        : ''),
-                    'error');
+                if (response.error === 'concurrencia') {
+                    // Actualizar calendario y mostrar mensaje
+                    await initializeCalendar();
+                    Swal.fire({
+                        title: 'Cambios detectados',
+                        html: `El límite de solicitudes para esta fecha fue alcanzado.<br>
+                          <small>El calendario se ha actualizado con los últimos cambios.</small>`,
+                        icon: 'info',
+                        confirmButtonText: 'Entendido'
+                    });
+                } else {
+                    Swal.fire('Error', response.message || 'Error al guardar la solicitud', 'error');
+                }
             }
         } catch (error) {
             console.error('Error al guardar:', error);
