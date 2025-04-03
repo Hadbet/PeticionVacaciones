@@ -248,7 +248,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
             <div class="row justify-content-center">
                 <div class="col-12">
 
-                    <h2 class="page-title">Petición de vacaciones tienes <span class="badge badge-dark">28</span> dias
+                    <h2 class="page-title">Petición de vacaciones tienes <span class="badge badge-dark" id="vacaciones"></span> dias
                         disponibles</h2>
                     <div class="card shadow mb-4">
                         <div class="card-header">
@@ -390,6 +390,13 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
 <script>
+
+    function orden(tag) {
+        $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoVacaciones.php?usuario=<?php echo $_SESSION["nomina"]?>', function (data) {
+            document.getElementById('vacaciones').innerHTML = data.data[0].DiasVacaciones;
+        });
+    }
+
     function llenarSuper() {
         $.getJSON('https://grammermx.com/RH/Vacaciones/dao/daoSupervisor.php?APU=' + document.getElementById("cbApu").value, function (data) {
             var selectS = document.getElementById("cbSupervisor");
