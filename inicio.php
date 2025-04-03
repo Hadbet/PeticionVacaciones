@@ -986,7 +986,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                     confirmButtonText: "OK Gracias!",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.open("https://grammermx.com/RH/Vacaciones/inicio.php");
+                        location.reload();
                     }
                 });
             } else {
