@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="assets/images/Grammer_Logo.ico">
+    <link rel="icon" href="assets/images/Grammer_Logo.ico" type="image/x-icon">
     <title>Work Force Grammovil</title>
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="css/simplebar.css">
@@ -19,211 +19,6 @@
     <link rel="stylesheet" href="css/daterangepicker.css">
     <!-- App CSS -->
     <link rel="stylesheet" href="css/app-light.css" id="lightTheme">
-    <link rel="stylesheet" href="css/app-dark.css" id="darkTheme" disabled>
-
-    <style>
-        :root {
-            --primary: #4a6baf;
-            --secondary: #f8f9fa;
-            --accent: #ff6b6b;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
-
-        .calendar-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .calendar-header {
-            background: var(--primary);
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .calendar-title {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .calendar-nav button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px 15px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .calendar-nav button:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background: #e0e0e0;
-        }
-
-        .day-header {
-            background: var(--secondary);
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .day-cell {
-            min-height: 100px;
-            background: white;
-            padding: 5px;
-            position: relative;
-        }
-
-        .day-number {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .event {
-            background: var(--accent);
-            color: white;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            margin-bottom: 2px;
-            cursor: pointer;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .other-month {
-            background: #f8f9fa;
-            color: #aaa;
-        }
-
-        .today {
-            background-color: #e3f2fd;
-        }
-
-        .blocked-day {
-            background-color: #ffeaea;
-            color: #ff6b6b;
-            cursor: not-allowed;
-        }
-
-        .future-day {
-            background-color: #f0fff0;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            max-width: 90%;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .event-counter {
-            font-weight: bold;
-            padding: 2px;
-            border-radius: 3px;
-            background-color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
-            text-align: right;
-            margin-bottom: 5px;
-        }
-
-        .day-cell:hover .event-counter {
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-
-        .alert-info {
-            margin-top: 15px;
-            border-radius: 5px;
-        }
-
-        .blocked-day .event-counter {
-            color: #ccc !important;
-        }
-
-    </style>
 
 </head>
 <body class="vertical  light  ">
@@ -264,21 +59,17 @@
 
                 <div class="col-md-12 mb-4">
                     <div class="card shadow">
-                        <div class="card-header">
-                            <strong class="card-title">Logging</strong>
-                            <a class="float-right small text-muted" href="#!">View all</a>
-                        </div>
                         <div class="card-body">
                             <div class="list-group list-group-flush my-n3">
                                 <div class="list-group-item">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
-                                            <span class="circle circle-sm bg-warning"><i class="fe fe-shield-off fe-16 text-white"></i></span>
+                                            <span class="circle circle-sm bg-warning"><i class="fe fe-alert-triangle fe-16 text-white"></i></span>
                                         </div>
                                         <div class="col">
-                                            <small><strong>11:00 April 16, 2020</strong></small>
-                                            <div class="mb-2 text-muted small">Lorem ipsum dolor sit amet, <strong>consectetur adipiscing</strong> elit. Integer dignissim nulla eu quam cursus placerat. Vivamus non odio ullamcorper, lacinia ante nec, blandit leo. </div>
-                                            <span class="badge badge-pill badge-warning">Security</span>
+                                            <small><strong>Cinepolis Grammer</strong></small>
+                                            <div class="mb-2 text-muted small">Recuerda registrarte a mas tardar el dia 14 de abril para acudir al cine con tus niños el 27 de este mes</div>
+                                            <span class="badge badge-pill badge-warning">Recursos Humanos</span>
                                         </div>
                                         <div class="col-auto pr-0">
                                             <small class="fe fe-more-vertical fe-16 text-muted"></small>
@@ -291,7 +82,7 @@
                                             <span class="circle circle-sm bg-success"><i class="fe fe-database fe-16 text-white"></i></span>
                                         </div>
                                         <div class="col">
-                                            <small><strong>17:00 April 15, 2020</strong></small>
+                                            <small><strong>Objetos extraviados</strong></small>
                                             <div class="mb-2 text-muted small">Proin porta vel erat suscipit luctus. Cras rhoncus felis sed magna commodo, in <a href="#!">pretium</a> mauris faucibus. Cras rhoncus felis sed magna commodo, in pretium mauris faucibus.</div>
                                             <span class="badge badge-pill badge-success">System Update</span>
                                         </div>
@@ -393,7 +184,7 @@
                     <div class="card shadow mb-12">
                         <div class="card-body text-center">
                             <a href="#!" class="avatar avatar-lg">
-                                <img src="https://grammermx.com/Fotos/00030304.png" alt="..." class="avatar-img rounded-circle">
+                                <img src="https://grammermx.com/Fotos/00001540.png" alt="..." class="avatar-img rounded-circle">
                             </a>
                             <div class="card-text my-2">
                                 <strong class="card-title my-0">Paola Noguez</strong>
@@ -419,7 +210,7 @@
                     <div class="card shadow mb-12">
                         <div class="card-body text-center">
                             <a href="#!" class="avatar avatar-lg">
-                                <img src="https://grammermx.com/Fotos/00030304.png" alt="..." class="avatar-img rounded-circle">
+                                <img src="https://grammermx.com/Fotos/00001635.png" alt="..." class="avatar-img rounded-circle">
                             </a>
                             <div class="card-text my-2">
                                 <strong class="card-title my-0">Miguel Solorio </strong>

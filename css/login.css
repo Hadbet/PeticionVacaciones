@@ -279,3 +279,15 @@ body{
 #registrarseForm .invalid-feedback{
     margin-top: 0;
 }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .footer_section {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer_section {
+        display: none !important;
+    }
+}

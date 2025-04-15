@@ -17,7 +17,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="assets/images/Grammer_Logo.ico">
+    <link rel="icon" href="assets/images/Grammer_Logo.ico" type="image/x-icon">
     <title>Peticion Vacaciones</title>
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="css/simplebar.css">
