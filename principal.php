@@ -50,7 +50,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                                 <div class="col-md-5">
                                     <div class="mx-4">
                                         <strong class="mb-0 text-uppercase text-muted">Bienvenido</strong><br />
-                                        <h3>Hadbet Ayari Altamirano Martinez</h3>
+                                        <h3 id="txtNombre">Hadbet Ayari Altamirano Martinez</h3>
                                         <p class="text-muted">Se mostrara un resumen de su expediente actual como trabajador de grammer</p>
                                     </div>
                                     <div class="row align-items-center">
