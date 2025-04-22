@@ -57,13 +57,13 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                                         <div class="col-6">
                                             <div class="p-4">
                                                 <p class="text-uppercase mb-0">Vacaciones</p>
-                                                <span class="h2 mb-0" id="txtVacaciones">10 dias</span>
+                                                <span class="h2 mb-0" id="txtVacaciones"></span>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="p-4">
                                                 <p class="text-uppercase mb-0">Fondo de ahorro</p>
-                                                <span class="h2 mb-0" id="txtFondoAhorro">$70000</span>
+                                                <span class="h2 mb-0" id="txtFondoAhorro"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -71,13 +71,21 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                                         <div class="col-6">
                                             <div class="p-4">
                                                 <p class="text-uppercase mb-0">Caja de ahorro</p>
-                                                <span class="h2 mb-0" id="txtCajaAhorro">$8000</span>
+                                                <span class="h2 mb-0" id="txtCajaAhorro"></span>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="p-4">
                                                 <p class="text-uppercase mb-0">Pendiente Prestamo</p>
-                                                <span class="h2 mb-0" id="txtPendientePrestamo">$10</span>
+                                                <span class="h2 mb-0" id="txtPendientePrestamo"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div class="col-12">
+                                            <div class="p-4">
+                                                <p class="text-uppercase mb-0">Antiguedad</p>
+                                                <span class="h2 mb-0" id="txtAntiguedad"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -321,7 +329,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
                 mes = 'diciembre';
             }
 
-            //document.getElementById('txt').innerHTML = dia + " de " + mes + " del " + ano;
+            document.getElementById('txtAntiguedad').innerHTML = dia + " de " + mes + " del " + ano;
         });
 
         $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoCajaAhorro.php?usuario=' + tag, function (data) {
