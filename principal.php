@@ -1,4 +1,16 @@
 
+
+<?php
+session_start();
+/*
+if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='1; URL=index.html'>";
+    session_destroy();
+} else {
+    session_start();
+}*/
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -19,7 +31,6 @@
     <link rel="stylesheet" href="css/daterangepicker.css">
     <!-- App CSS -->
     <link rel="stylesheet" href="css/app-light.css" id="lightTheme">
-
 </head>
 <body class="vertical  light  ">
 <div class="wrapper">
@@ -31,236 +42,209 @@
         <div class="container-fluid">
             <div class="row justify-content-center">
 
-                <div class="col-md-12 text-center mb-4">
-                    <img src="./assets/images/comunicados.png" alt="..." style="width: 70%">
-                </div>
+                <div class="col-12">
 
-                <div class="col-md-6 text-center mt-4 ">
-                    <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/2025032108223340124.png" alt="..."  style="width: 100%">
-                </div>
-
-                <div class="col-md-6 text-center mt-4 ">
-                    <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250211113520500632.png" alt="..."  style="width: 100%">
-                </div>
-
-                <div class="col-md-6 text-center mt-4 ">
-                    <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250321082258482261.png" alt="..."  style="width: 100%">
-                </div>
-
-                <div class="col-md-6 text-center mt-4 ">
-                    <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250321082405423513.png" alt="..."  style="width: 100%">
-                </div>
-
-
-                <div class="col-md-12 text-center mt-4">
-                    <p class="h1 mb-4">Avisos</p>
-                </div>
-
-
-                <div class="col-md-12 mb-4">
-                    <div class="card shadow">
+                    <div class="card shadow my-4">
                         <div class="card-body">
-                            <div class="list-group list-group-flush my-n3">
-                                <div class="list-group-item">
+                            <div class="row align-items-center my-4">
+                                <div class="col-md-5">
+                                    <div class="mx-4">
+                                        <strong class="mb-0 text-uppercase text-muted">Bienvenido</strong><br />
+                                        <h3>Hadbet Ayari Altamirano Martinez</h3>
+                                        <p class="text-muted">Se mostrara un resumen de su expediente actual como trabajador de grammer</p>
+                                    </div>
                                     <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="circle circle-sm bg-warning"><i class="fe fe-alert-triangle fe-16 text-white"></i></span>
+                                        <div class="col-6">
+                                            <div class="p-4">
+                                                <p class="text-uppercase mb-0">Vacaciones</p>
+                                                <span class="h2 mb-0" id="txtVacaciones">10 dias</span>
+                                            </div>
                                         </div>
-                                        <div class="col">
-                                            <small><strong>Cinepolis Grammer</strong></small>
-                                            <div class="mb-2 text-muted small">Recuerda registrarte a mas tardar el dia 14 de abril para acudir al cine con tus niños el 27 de este mes</div>
-                                            <span class="badge badge-pill badge-warning">Recursos Humanos</span>
+                                        <div class="col-6">
+                                            <div class="p-4">
+                                                <p class="text-uppercase mb-0">Fondo de ahorro</p>
+                                                <span class="h2 mb-0" id="txtFondoAhorro">$70000</span>
+                                            </div>
                                         </div>
-                                        <div class="col-auto pr-0">
-                                            <small class="fe fe-more-vertical fe-16 text-muted"></small>
-                                        </div>
-                                    </div> <!-- / .row -->
-                                </div><!-- / .list-group-item -->
-                                <div class="list-group-item">
+                                    </div>
                                     <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="circle circle-sm bg-success"><i class="fe fe-database fe-16 text-white"></i></span>
+                                        <div class="col-6">
+                                            <div class="p-4">
+                                                <p class="text-uppercase mb-0">Caja de ahorro</p>
+                                                <span class="h2 mb-0" id="txtCajaAhorro">$8000</span>
+                                            </div>
                                         </div>
-                                        <div class="col">
-                                            <small><strong>Objetos extraviados</strong></small>
-                                            <div class="mb-2 text-muted small">Proin porta vel erat suscipit luctus. Cras rhoncus felis sed magna commodo, in <a href="#!">pretium</a> mauris faucibus. Cras rhoncus felis sed magna commodo, in pretium mauris faucibus.</div>
-                                            <span class="badge badge-pill badge-success">System Update</span>
+                                        <div class="col-6">
+                                            <div class="p-4">
+                                                <p class="text-uppercase mb-0">Pendiente Prestamo</p>
+                                                <span class="h2 mb-0" id="txtPendientePrestamo">$10</span>
+                                            </div>
                                         </div>
-                                        <div class="col-auto pr-0">
-                                            <small class="fe fe-more-vertical fe-16 text-muted"></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="mr-4">
+                                        <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+                                            <div class="carousel-inner">
+                                            </div>
                                         </div>
-                                    </div> <!-- / .row -->
-                                </div><!-- / .list-group-item -->
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="circle circle-sm bg-secondary"><i class="fe fe-user-plus fe-16 text-white"></i></span>
-                                        </div>
-                                        <div class="col">
-                                            <small><strong>17:00 April 10, 2020</strong></small>
-                                            <div class="mb-2 text-muted small"> Morbi id arcu convallis, eleifend justo tristique, tincidunt nisl. Morbi euismod fermentum quam, at fringilla elit posuere a. <strong>Aliquam</strong> accumsan mi venenatis risus fermentum, at sagittis velit fermentum.</div>
-                                            <span class="badge badge-pill badge-secondary">Users</span>
-                                        </div>
-                                        <div class="col-auto pr-0">
-                                            <small class="fe fe-more-vertical fe-16 text-muted"></small>
-                                        </div>
-                                    </div> <!-- / .row -->
-                                </div><!-- / .list-group-item -->
-                            </div> <!-- / .list-group -->
+                                    </div>
+                                </div> <!-- .col-md-8 -->
+                            </div> <!-- end section -->
+                        </div> <!-- .card-body -->
+                    </div> <!-- .card -->
+
+                </div>
+
+
+                    <div class="col-md-4">
+                        <div class="card shadow bg-primary text-center mb-4">
+                            <div class="card-body p-5">
+                      <span class="circle circle-md bg-primary-light">
+                        <i class="fe fe-sun fe-24 text-white"></i>
+                      </span>
+                                <h3 class="h4 mt-4 mb-1 text-white">Peticion de vacaciones</h3>
+                                <p class="text-white mb-4">Plataforma para peticion de vacaciones unicamente personal de produccion.</p>
+                                <a href="principal.php" class="btn btn-lg bg-primary-light text-white">Solicitar<i class="fe fe-arrow-right fe-16 ml-2"></i></a>
+                            </div> <!-- .card-body -->
+                        </div> <!-- .card -->
+                    </div> <!-- .col-md-->
+
+                    <div class="col-md-4">
+                        <div class="card shadow bg-success text-center mb-4">
+                            <div class="card-body p-5">
+                      <span class="circle circle-md bg-success-light">
+                        <i class="fe fe-thumbs-up fe-24 text-white"></i>
+                      </span>
+                                <h3 class="h4 mt-4 mb-1 text-white">Suggestion System</h3>
+                                <p class="text-white mb-4">Plataforma para subir ideas de ahorro, tiempo, ergonomicos y de calidad, al igual que recomendaciones</p>
+                                <a href="https://grammermx.com/GPS/idea/IOS/login.php" class="btn btn-lg bg-success-light text-white">Agregar Idea<i class="fe fe-arrow-right fe-16 ml-2"></i></a>
+                            </div> <!-- .card-body -->
+                        </div> <!-- .card -->
+                    </div> <!-- .col-md-->
+
+                <div class="col-md-4">
+                    <div class="card shadow bg-info text-center mb-4">
+                        <div class="card-body p-5">
+                      <span class="circle circle-md bg-info-light">
+                        <i class="fe fe-dollar-sign fe-24 text-white"></i>
+                      </span>
+                            <h3 class="h4 mt-4 mb-1 text-white">Caja de ahorro y prestamos</h3>
+                            <p class="text-white mb-4">Plataforma de registros de caja de ahorro, consulta y retiro de ella, al igual que para prestamos.</p>
+                            <a href="https://grammermx.com/RH/CajaDeAhorro/login.php" class="btn btn-lg bg-info-light text-white">Entrar<i class="fe fe-arrow-right fe-16 ml-2"></i></a>
+                        </div> <!-- .card-body -->
+                    </div> <!-- .card -->
+                </div> <!-- .col-md-->
+
+
+                <div class="col-md-6">
+                    <h1 class="h2 mb-4">Reportes con RH</h1>
+                    <div class="card shadow mb-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-4 col-md-2 text-center">
+                                    <a href="profile-posts.html" class="avatar avatar-md">
+                                        <img src="https://grammermx.com/Fotos/00001540.png" alt="..." class="avatar-img rounded-circle">
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <strong class="mb-1">Paola Noguez</strong><span class="dot dot-lg bg-success ml-1"></span>
+                                    <p class="small text-muted mb-1">RH - Atencion a comunicados de la pagina</p>
+                                </div>
+                                <div class="col-4 col-md-auto offset-4 offset-md-0 my-2">
+                                    <a href="#!" class="btn btn-sm btn-secondary">Contact</a>
+                                </div>
+                            </div>
                         </div> <!-- / .card-body -->
                     </div> <!-- / .card -->
-                </div> <!-- / .col -->
 
 
-                <div class="col-md-12 text-center mt-4">
-                    <p class="h1 mb-4">Orgullo Grammer</p>
-                </div>
+                    <div class="card shadow mb-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-4 col-md-2 text-center">
+                                    <a href="profile-posts.html" class="avatar avatar-md">
+                                        <img src="https://grammermx.com/Fotos/00001227.png" alt="..." class="avatar-img rounded-circle">
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <strong class="mb-1">Perla Martinez</strong><span class="dot dot-lg bg-success ml-1"></span>
+                                    <p class="small text-muted mb-1">RH - Atencion entrenamiento y capcitacion de las capsulas de la pagina</p>
+                                </div>
+                                <div class="col-4 col-md-auto offset-4 offset-md-0 my-2">
+                                    <a href="#!" class="btn btn-sm btn-secondary">Contact</a>
+                                </div>
+                            </div>
+                        </div> <!-- / .card-body -->
+                    </div> <!-- / .card -->
+
+
+                    <div class="card shadow mb-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-4 col-md-2 text-center">
+                                    <a href="profile-posts.html" class="avatar avatar-md">
+                                        <img src="https://grammermx.com/Fotos/00001555.png" alt="..." class="avatar-img rounded-circle">
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <strong class="mb-1">Roberto Arreola</strong><span class="dot dot-lg bg-success ml-1"></span>
+                                    <p class="small text-muted mb-1">RH - Atencion a nominas y caja de ahorro de la pagina.</p>
+                                </div>
+                                <div class="col-4 col-md-auto offset-4 offset-md-0 my-2">
+                                    <a href="#!" class="btn btn-sm btn-secondary">Contact</a>
+                                </div>
+                            </div>
+                        </div> <!-- / .card-body -->
+                    </div> <!-- / .card -->
+
+
+                </div> <!-- / .col- -->
+
 
                 <div class="col-md-6">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250321082216org.jpg" style="width: 80%">
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">Roberto Perez</strong>
-                                <p class="small"><span class="badge badge-dark">Ingenieria</span></p>
-                            </div>
-                        </div> <!-- ./card-text -->
-                    </div> <!-- /.card -->
-                </div>
+                    <h1 class="h2 mb-4">Reporte Generales</h1>
 
-                <div class="col-md-12 text-center mt-4">
-                    <p class="h1 mb-4">Mejores lineas del mes</p>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250321082003l1.png" style="width: 100%">
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">Foam MFA2 consolas</strong>
-                            </div>
-                        </div> <!-- ./card-text -->
-                    </div> <!-- /.card -->
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250103101207237499.png" style="width: 100%">
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">Suspensiones de MSG 75</strong>
-                            </div>
-                        </div> <!-- ./card-text -->
-                    </div> <!-- /.card -->
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250321082016959288.png" style="width: 100%">
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">BR167 SIDE PANEL</strong>
-                            </div>
-                        </div> <!-- ./card-text -->
-                    </div> <!-- /.card -->
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <img src="https://grammermx.com/RH/GrammovilApp/inicio/images/20250321082041632936.png" style="width: 100%">
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">G06-G07 Costura</strong>
-                            </div>
-                        </div> <!-- ./card-text -->
-                    </div> <!-- /.card -->
-                </div>
-
-                <div class="col-md-12 text-center mt-4">
-                    <p class="h1 mb-4">Contactos o reportes</p>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <a href="#!" class="avatar avatar-lg">
-                                <img src="https://grammermx.com/Fotos/00001540.png" alt="..." class="avatar-img rounded-circle">
-                            </a>
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">Paola Noguez</strong>
-                                <p class="small text-muted mb-0">Comunicacion</p>
-                                <p class="small"><span class="badge badge-dark">Comunicados y avisos</span></p>
-                            </div>
-                        </div> <!-- ./card-text -->
-                        <div class="card-footer">
-                            <div class="row align-items-center justify-content-between">
-                                <div class="col-auto">
-                                    <small>
-                                        <span class="dot dot-lg bg-success mr-1"></span> Enviamos un Whats App </small>
+                    <div class="card shadow mb-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-4 col-md-2 text-center">
+                                    <a href="profile-posts.html" class="avatar avatar-md">
+                                        <img src="https://grammermx.com/Fotos/00001606.png" alt="..." class="avatar-img rounded-circle">
+                                    </a>
                                 </div>
-                                <div class="col-auto">
-                                    <a href="https://wa.me/524421301886?text=Hola%20mundo" class="btn btn-sm btn-primary">Aqui</a>
+                                <div class="col">
+                                    <strong class="mb-1">Hadbet Altamirano</strong><span class="dot dot-lg bg-success ml-1"></span>
+                                    <p class="small text-muted mb-1">IT - Atencion del soporte web y desarrollo.</p>
+                                </div>
+                                <div class="col-4 col-md-auto offset-4 offset-md-0 my-2">
+                                    <a href="#!" class="btn btn-sm btn-secondary">Contact</a>
                                 </div>
                             </div>
-                        </div> <!-- /.card-footer -->
-                    </div> <!-- /.card -->
-                </div>
+                        </div> <!-- / .card-body -->
+                    </div> <!-- / .card -->
 
-                <div class="col-md-4">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <a href="#!" class="avatar avatar-lg">
-                                <img src="https://grammermx.com/Fotos/00001635.png" alt="..." class="avatar-img rounded-circle">
-                            </a>
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">Miguel Solorio </strong>
-                                <p class="small text-muted mb-0">Comunicacion</p>
-                                <p class="small"><span class="badge badge-dark">Comunicados y avisos</span></p>
-                            </div>
-                        </div> <!-- ./card-text -->
-                        <div class="card-footer">
-                            <div class="row align-items-center justify-content-between">
-                                <div class="col-auto">
-                                    <small>
-                                        <span class="dot dot-lg bg-success mr-1"></span> Enviamos un Whats App </small>
+                    <div class="card shadow mb-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-4 col-md-2 text-center">
+                                    <a href="profile-posts.html" class="avatar avatar-md">
+                                        <img src="https://grammermx.com/Fotos/00001818.png" alt="..." class="avatar-img rounded-circle">
+                                    </a>
                                 </div>
-                                <div class="col-auto">
-                                    <a href="https://wa.me/524421301886?text=Hola%20mundo" class="btn btn-sm btn-primary">Aqui</a>
+                                <div class="col">
+                                    <strong class="mb-1">Erick Duran</strong><span class="dot dot-lg bg-success ml-1"></span>
+                                    <p class="small text-muted mb-1">GPS - Atencion a ideas de mejora suggestion system</p>
+                                </div>
+                                <div class="col-4 col-md-auto offset-4 offset-md-0 my-2">
+                                    <a href="#!" class="btn btn-sm btn-secondary">Contact</a>
                                 </div>
                             </div>
-                        </div> <!-- /.card-footer -->
-                    </div> <!-- /.card -->
-                </div>
+                        </div> <!-- / .card-body -->
+                    </div> <!-- / .card -->
 
-                <div class="col-md-4">
-                    <div class="card shadow mb-12">
-                        <div class="card-body text-center">
-                            <a href="#!" class="avatar avatar-lg">
-                                <img src="https://grammermx.com/Fotos/00001606.png" alt="..." class="avatar-img rounded-circle">
-                            </a>
-                            <div class="card-text my-2">
-                                <strong class="card-title my-0">Hadbet Ayari</strong>
-                                <p class="small text-muted mb-0">IT</p>
-                                <p class="small"><span class="badge badge-dark">Reportes sobre la plataforma</span></p>
-                            </div>
-                        </div> <!-- ./card-text -->
-                        <div class="card-footer">
-                            <div class="row align-items-center justify-content-between">
-                                <div class="col-auto">
-                                    <small>
-                                        <span class="dot dot-lg bg-success mr-1"></span> Enviamos un Whats App </small>
-                                </div>
-                                <div class="col-auto">
-                                    <a href="https://wa.me/524421301886?text=Hola%20mundo" class="btn btn-sm btn-primary">Aqui</a>
-                                </div>
-                            </div>
-                        </div> <!-- /.card-footer -->
-                    </div> <!-- /.card -->
-                </div>
 
-                <div class="col-md-12 text-center mt-4 mb-4 ">
-                    <img src="./assets/images/fachada.png" alt="..." class="avatar-img rounded-circle" style="width: 50%">
-                </div>
+                </div> <!-- / .col- -->
 
             </div>
         </div>
@@ -278,13 +262,105 @@
 <script src="js/config.js"></script>
 <script src="js/apps.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
+
 <script>
 
+    $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoUsuario.php?usuario=<?php echo $_SESSION["nomina"];?>', function (data) {
+        text = data.data[0].NomUser;
+        const myArray = text.split(" ");
+        let word = myArray[0] + ' ' + myArray[1];
+        document.getElementById('txtNombre').innerHTML = text;
+        tag = data.data[0].IdTag;
+        orden(data.data[0].IdTag);
+    });
+
+    function orden(tag) {
+        $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoVacaciones.php?usuario=' + id, function (data) {
+            document.getElementById('txtVacaciones').innerHTML = data.data[0].DiasVacaciones;
+
+            var fechaAux = data.data[0].FechaIngreso;
+            let divicionFecha = fechaAux.split('-');
+            ano = divicionFecha[0];
+            mes = divicionFecha[1];
+            dia = divicionFecha[2];
+
+            if (mes == '01') {
+                mes = 'enero';
+            }
+            if (mes == '02') {
+                mes = 'febrero';
+            }
+            if (mes == '03') {
+                mes = 'marzo';
+            }
+            if (mes == '04') {
+                mes = 'abril';
+            }
+            if (mes == '05') {
+                mes = 'mayo';
+            }
+            if (mes == '06') {
+                mes = 'junio';
+            }
+            if (mes == '07') {
+                mes = 'julio';
+            }
+            if (mes == '08') {
+                mes = 'agosto';
+            }
+            if (mes == '09') {
+                mes = 'septiembre';
+            }
+            if (mes == '10') {
+                mes = 'octubre';
+            }
+            if (mes == '11') {
+                mes = 'noviembre';
+            }
+            if (mes == '12') {
+                mes = 'diciembre';
+            }
+
+            //document.getElementById('txt').innerHTML = dia + " de " + mes + " del " + ano;
+        });
+
+        $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoCajaAhorro.php?usuario=' + tag, function (data) {
+
+            document.getElementById('txtCajaAhorro').innerHTML = data.data[0].AhorroTotal;
+            document.getElementById('txtPendientePrestamo').innerHTML = data.data[0].PendientePrestamo;
+            document.getElementById('txtFondoAhorro').innerHTML = data.data[0].FondoAhorro;
+        });
+    }
 
 
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const carouselInner = document.querySelector('.carousel-inner');
+        const imageCount = 10; // Número total de imágenes (1.jpg a 10.jpg)
+        const imagePath = 'assets/images/carrusel/'; // Ajusta esta ruta según tu estructura de carpetas
+
+        // Generar los elementos del carrusel
+        for (let i = 1; i <= imageCount; i++) {
+            const div = document.createElement('div');
+            div.className = `carousel-item ${i === 1 ? 'active' : ''}`;
+
+            const img = document.createElement('img');
+            img.src = `${imagePath}${i}.jpg`;
+            img.alt = `Imagen ${i}`;
+            img.className = 'd-block w-100 rounded-circle';
+            img.style.width = '100%';
+            img.style.height = 'auto';
+            img.style.objectFit = 'cover';
+
+            div.appendChild(img);
+            carouselInner.appendChild(div);
+        }
+
+        // Configurar el cambio automático cada 3 segundos (3000 ms)
+        $('.carousel').carousel({
+            interval: 3000
+        });
+    });
 </script>
-
 </body>
 </html>

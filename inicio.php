@@ -67,6 +67,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
         .calendar-title {
             margin: 0;
             font-size: 1.5rem;
+            color: white;
         }
 
         .calendar-nav button {
