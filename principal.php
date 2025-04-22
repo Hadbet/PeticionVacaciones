@@ -266,7 +266,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
 <script>
 
     $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoUsuario.php?usuario=<?php echo $_SESSION["nomina"];?>', function (data) {
-        text = data.data[0].NomUser;
+        var text = data.data[0].NomUser;
         const myArray = text.split(" ");
         let word = myArray[0] + ' ' + myArray[1];
         document.getElementById('txtNombre').innerHTML = text;
