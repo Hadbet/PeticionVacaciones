@@ -275,7 +275,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
     });
 
     function orden(tag) {
-        $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoVacaciones.php?usuario=' + id, function (data) {
+        $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoVacaciones.php?usuario=' + tag, function (data) {
             document.getElementById('txtVacaciones').innerHTML = data.data[0].DiasVacaciones;
 
             var fechaAux = data.data[0].FechaIngreso;
