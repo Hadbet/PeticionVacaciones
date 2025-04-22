@@ -276,7 +276,7 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
 
     function orden(tag) {
         $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoVacaciones.php?usuario=<?php echo $_SESSION["nomina"];?>', function (data) {
-            document.getElementById('txtVacaciones').innerHTML = data.data[0].DiasVacaciones;
+            document.getElementById('txtVacaciones').innerHTML = data.data[0].DiasVacaciones + " dias";
 
             var fechaAux = data.data[0].FechaIngreso;
             let divicionFecha = fechaAux.split('-');
@@ -325,10 +325,15 @@ if ($_SESSION["nomina"] == "" && $_SESSION["nomina"] == null) {
         });
 
         $.getJSON('https://grammermx.com/RH/GrammovilApp/inicio/dao/DaoCajaAhorro.php?usuario=' + tag, function (data) {
+            const formatter = new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                minimumFractionDigits: 0
+            });
 
-            document.getElementById('txtCajaAhorro').innerHTML = data.data[0].AhorroTotal;
-            document.getElementById('txtPendientePrestamo').innerHTML = data.data[0].PendientePrestamo;
-            document.getElementById('txtFondoAhorro').innerHTML = data.data[0].FondoAhorro;
+            document.getElementById('txtCajaAhorro').innerHTML = formatter.format(data.data[0].AhorroTotal);
+            document.getElementById('txtPendientePrestamo').innerHTML = formatter.format(data.data[0].PendientePrestamo);
+            document.getElementById('txtFondoAhorro').innerHTML = formatter.format(data.data[0].FondoAhorro);
         });
     }
 
